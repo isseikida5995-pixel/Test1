@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DAIKIN Installer Pro</title>
+    <style>
+        :root {
+            --daikin-blue: #00A1E4;
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+            --bg-gray: #f4f7f9;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            margin: 0;
+            background-color: var(--bg-gray);
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* ヘッダー */
+        header {
+            background-color: white;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 3px solid var(--daikin-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
+
+        /* インセンティブ・カメラエリア */
+        .incentive-box {
+            background: linear-gradient(135deg, var(--daikin-blue), #0076a8);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,161,228,0.3);
+        }
+
+        #camera-container {
+            margin: 15px 0;
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none; /* 最初は隠す */
+        }
+
+        video, canvas {
+            width: 100%;
+            display: block;
+        }
+
+        .btn-action {
+            background: white;
+            color: var(--daikin-blue);
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* メインメニュー（グリッド） */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .menu-card {
+            background: white;
+            padding: 18px 10px;
+            text-align: center;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--daikin-blue);
+        }
+
+        .menu-card .icon { font-size: 28px; display: block; margin-bottom: 8px; }
+
+        /* ホットライン */
+        .hotline-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-hotline {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .sales { background-color: var(--success-green); }
+        .service { background-color: var(--danger-red); }
+
+        /* フィードバック */
+        .feedback-area {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="font-weight: bold; color: #00A1E4; font-size: 20px;">DAIKIN <span style="color:#333">PRO</span></div>
+</header>
+
+<div class="container">
+
+    <div class="incentive-box">
+        <h2 style="margin:0 0 10px 0; font-size: 18px;">設置履歴の登録</h2>
+        <p style="font-size: 14px; opacity: 0.9;">シリアル番号を撮影してポイント獲得</p>
+        
+        <div id="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+
+        <button id="btn-start" class="btn-action">📷 カメラを起動</button>
+        <button id="btn-shutter" class="btn-action" style="display:none; background:#ffc107;">📸 撮影する</button>
+        <button id="btn-retry" class="btn-action" style="display:none;">🔄 撮り直す</button>
+    </div>
+
+    <div class="grid-menu">
+        <a href="#" class="menu-card"><span class="icon">📘</span>施工要領</a>
+        <a href="#" class="menu-card"><span class="icon">🎬</span>施工動画</a>
+        <a href="#" class="menu-card"><span class="icon">🔍</span>エラーコード</a>
+        <a href="#" class="menu-card"><span class="icon">📋</span>技術資料</a>
+    </div>
+
+    <h3 style="font-size: 16px; margin-bottom: 10px;">技術・営業相談（ホットライン）</h3>
+    <div class="hotline-group">
+        <button class="btn-hotline sales" onclick="alert('営業担当へ発信します')">営業担当</button>
+        <button class="btn-hotline service" onclick="alert('技術相談窓口へ発信します')">修理・技術</button>
+    </div>
+
+    <div class="feedback-area">
+        <label style="font-weight: bold; font-size: 14px;">メーカーへの直接フィードバック</label>
+        <textarea rows="3" placeholder="現場での困りごと、製品への要望を入力してください"></textarea>
+        <button style="width:100%; margin-top:10px; padding:10px; background: #333; color:white; border:none; border-radius:5px;">内容を送信する</button>
+    </div>
+
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const cameraContainer = document.getElementById('camera-container');
+    const btnStart = document.getElementById('btn-start');
+    const btnShutter = document.getElementById('btn-shutter');
+    const btnRetry = document.getElementById('btn-retry');
+
+    let stream = null;
+
+    // カメラ起動
+    btnStart.addEventListener('click', async () => {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "environment" }, 
+                audio: false 
+            });
+            video.srcObject = stream;
+            cameraContainer.style.display = 'block';
+            btnStart.style.display = 'none';
+            btnShutter.style.display = 'inline-block';
+        } catch (err) {
+            alert("カメラへのアクセスを許可してください。");
+        }
+    });
+
+    // 撮影（シャッター）
+    btnShutter.addEventListener('click', () => {
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // 映像を止めて画像を表示
+        video.style.display = 'none';
+        canvas.style.display = 'block';
+        btnShutter.style.display = 'none';
+        btnRetry.style.display = 'inline-block';
+
+        // ストップ（バッテリー節約）
+        stream.getTracks().forEach(track => track.stop());
+        
+        alert("画像を保存しました。OCR（文字読み取り）を開始します...");
+    });
+
+    // 撮り直し
+    btnRetry.addEventListener('click', () => {
+        location.reload(); // 簡易的にリロードでリセット
+    });
+</script>
+
+</body>
+</html>
